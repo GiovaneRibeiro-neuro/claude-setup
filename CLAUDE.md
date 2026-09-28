@@ -28,7 +28,7 @@ Located in `~/.claude/commands`
 | refactor-clean | Safely identify and remove dead code with test verification at every step |
 | session-time | Calculates the user time in actual chat with Claude |
 | skill-health | Show skill portfolio health dashboard with charts and analytics |
-| tdd | This command invokes the **tdd-guide** agent to enforce test-driven development methodology |
+| tdd | Enforce TDD workflow via the Pocock `tdd` skill — write tests first, red-green-refactor |
 | track-work | Create tracker (Jira) epics/tasks for an approved plan, then stop for confirmation before implementation. Opt-in. |
 | update-codemaps | Analyze the codebase structure and generate token-lean architecture documentation |
 | update-docs | Sync documentation with the codebase, generating from source-of-truth files |
@@ -58,19 +58,11 @@ Located in `~/.claude/agents/`
 | manager | Done | Top-level orchestrator, decomposes requests and dispatches to specialists |
 | architect | Done | System design and architecture |
 | code-reviewer | Done | Code review for quality/security |
-| doc-updater | ToDo | Documentation updates |
-| go-reviewer | Done | Expert Go code reviewer |
-| go-build-resolver | Done | Go build, vet, and compilation error resolution specialist |
-| java-reviewer | Done | Expert Java and Spring Boot code reviewer |
-| java-build-resolver | Done | Java/Maven/Gradle build, compilation, and dependency error resolution specialist |
-| python-resolver | Done | Expert Python code reviewer |
-| rust-reviewer | Done | Expert Rust code reviewer |
-| tracker-integrator | Done | Creates tracker (Jira) epics/tasks from an approved plan, opt-in |
-| rust-build-resolver | Done | Rust build, borrow-checker, and clippy error resolution specialist |
-| planner | Done | Feature implementation planning |
-| tdd-guide | Done | Test-driven development |
+| lang-reviewer | Done | Language-specific review for Go, Java, Python, Rust — auto-detects from changed files |
+| build-resolver | Done | Build/lint/compilation fixes for Go, Java/Maven/Gradle, Rust/Cargo — auto-detects language |
 | security-reviewer | Done | Security vulnerability analysis |
-| refactor-cleaner | Done | Dead code cleanup |
+| doc-updater | ToDo | Documentation updates |
+| pm-assistant | Done | Jira health reports, Epic authoring, executive summaries, sprint retros |
 
 ## personal preferences
 

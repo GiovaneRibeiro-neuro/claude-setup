@@ -4,7 +4,7 @@ description: Enforce test-driven development workflow. Scaffold interfaces, gene
 
 # TDD Command
 
-This command invokes the **tdd-guide** agent to enforce test-driven development methodology.
+This command uses the **tdd** skill (from mattpocock/skills) to enforce test-driven development methodology.
 
 ## What This Command Does
 
@@ -25,7 +25,7 @@ Use `/tdd` when:
 
 ## How It Works
 
-The tdd-guide agent will:
+The tdd skill will:
 
 1. **Define interfaces** for inputs/outputs
 2. **Write tests that will FAIL** (because code doesn't exist yet)
@@ -51,7 +51,7 @@ REPEAT:   Next feature/scenario
 ```
 User: /tdd I need a function to calculate market liquidity score
 
-Agent (tdd-guide):
+tdd skill output:
 # TDD Session: Market Liquidity Score Calculator
 
 ## Step 1: Define Interface (SCAFFOLD)
@@ -317,12 +317,8 @@ Never skip the RED phase. Never write code before tests.
 - Use `/code-review` to review implementation
 - Use `/test-coverage` to verify coverage
 
-## Related Agents
+## Related Skills
 
-This command invokes the `tdd-guide` agent provided by ECC.
+This command uses the `tdd` model-invoked skill from `mattpocock/skills`.
 
-The related `tdd-workflow` skill is also bundled with ECC.
-
-For manual installs, the source files live at:
-- `agents/tdd-guide.md`
-- `skills/tdd-workflow/SKILL.md`
+Install it via: `claude mcp add --transport http mattpocock-skills https://skills.aihero.dev/mcp`
