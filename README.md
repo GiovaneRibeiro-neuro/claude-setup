@@ -12,7 +12,7 @@ and can't accidentally be committed.
 
 ```bash
 # 1. Clone the repo wherever you keep dotfiles
-git clone https://github.com/GiovaneRibeiro-neuro/claude-setup.git ~/workspace/claude-setup
+git clone https://github.com/giovanebribeiro/claude-setup.git ~/workspace/claude-setup
 
 # 2. Run the installer
 bash ~/workspace/claude-setup/install.sh
@@ -39,13 +39,13 @@ individual skills into any project or globally:
 
 ```bash
 # List available skills
-npx skills add GiovaneRibeiro-neuro/claude-setup --list
+npx skills add giovanebribeiro/claude-setup --list
 
 # Install a specific skill into the current project
-npx skills add GiovaneRibeiro-neuro/claude-setup --skill jira-project-health
+npx skills add giovanebribeiro/claude-setup --skill jira-project-health
 
 # Install all skills globally
-npx skills add GiovaneRibeiro-neuro/claude-setup -a claude-code -g -y
+npx skills add giovanebribeiro/claude-setup -a claude-code -g -y
 ```
 
 ## Dependencies
