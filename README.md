@@ -1,94 +1,95 @@
 # claude-setup
 
-My configurations, scripts, skills, etc., for Claude Code. Got many things (including this structure) from this [amazing](https://github.com/affaan-m/everything-claude-code) project.
+My configurations, scripts, skills, etc., for Claude Code. Got many things (including
+this structure) from this [amazing](https://github.com/affaan-m/everything-claude-code)
+project.
+
+## Installation
+
+The repo lives outside `~/.claude/` and tracked files are **symlinked in** — so runtime
+files (credentials, cache, session data) never share a directory with git-tracked content
+and can't accidentally be committed.
+
+```bash
+# 1. Clone the repo wherever you keep dotfiles
+git clone https://github.com/giovanebribeiro/claude-setup.git ~/workspace/claude-setup
+
+# 2. Run the installer
+bash ~/workspace/claude-setup/install.sh
+```
+
+The installer symlinks each tracked item (`agents/`, `commands/`, `skills/`, `CLAUDE.md`,
+etc.) into `~/.claude/`. Anything that was already there gets backed up to
+`~/.claude-setup-backup/<timestamp>/` before being replaced.
+
+**Git workflow after install:** always `cd ~/workspace/claude-setup` to commit and push —
+never run git from inside `~/.claude/`.
+
+To remove the symlinks (runtime files are never touched):
+
+```bash
+bash ~/workspace/claude-setup/uninstall.sh
+```
+
+### Installing individual skills via vercel-labs/skills
+
+If you only need specific skills (without the full symlink setup), use the
+[vercel-labs/skills](https://github.com/vercel-labs/skills) CLI to install
+individual skills into any project or globally:
+
+```bash
+# List available skills
+npx skills add giovanebribeiro/claude-setup --list
+
+# Install a specific skill into the current project
+npx skills add giovanebribeiro/claude-setup --skill jira-project-health
+
+# Install all skills globally
+npx skills add giovanebribeiro/claude-setup -a claude-code -g -y
+```
 
 ## Dependencies
 
-* serena ([https://oraios.github.io/serena/02-usage/030_clients.html](https://oraios.github.io/serena/02-usage/030_clients.html))
-* rtk ([https://github.com/rtk-ai/rtk](https://github.com/rtk-ai/rtk))
-* caveman ([https://github.com/JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman))
-* mattpocock/skills ([https://github.com/mattpocock/skills](https://github.com/mattpocock/skills))
-
-### Installing mattpocock/skills
-
-The skills in this repo complement the agents here — they handle interactive engineering
-workflows (design drilling, tracer-bullet ticketing, TDD loops, debugging) that don't
-warrant a full autonomous agent.
-
-**Install via the Claude Code plugin system:**
-
-```bash
-claude mcp add --transport http mattpocock-skills https://skills.aihero.dev/mcp
-```
-
-Or clone and reference locally if you prefer not to use the hosted MCP:
-
-```bash
-git clone https://github.com/mattpocock/skills ~/workspace/mattpocock-skills
-# Then add the local path as a project dependency or copy skills into ~/.claude/skills/
-```
-
-**Skills that integrate directly with this repo's workflow:**
-
-| Pocock skill | Replaces / complements |
+| Dependency | Install |
 |---|---|
-| `/grill-me` | Replaces `planner` agent for interactive design drilling |
+| [serena](https://oraios.github.io/serena/02-usage/030_clients.html) | See link |
+| [rtk](https://github.com/rtk-ai/rtk) | See link |
+| [caveman](https://github.com/JuliusBrussee/caveman) | See link |
+| [mattpocock/skills](https://github.com/mattpocock/skills) | `claude mcp add --transport http mattpocock-skills https://skills.aihero.dev/mcp` |
+
+### Pocock skills used by this repo
+
+| Skill | Role |
+|---|---|
+| `/grill-me` | Interactive design drilling (replaces `planner` agent) |
 | `/wayfinder` | Large-feature planning via decision tickets |
-| `/to-spec` + `/to-tickets` | Replaces `tracker-integrator` agent for spec-to-Jira flow |
-| `tdd` (model-invoked) | Replaces `tdd-guide` agent for red-green-refactor loops |
+| `/to-spec` + `/to-tickets` | Spec-to-Jira flow (replaces `tracker-integrator` agent) |
+| `tdd` (model-invoked) | Red-green-refactor loops (replaces `tdd-guide` agent) |
 | `diagnosing-bugs` (model-invoked) | Hard-bug triage: minimize → hypothesize → instrument → fix |
-| `domain-modeling` (model-invoked) | Domain model review, term challenges, edge-case stress tests |
+| `domain-modeling` (model-invoked) | Domain model review and edge-case stress tests |
 | `/handoff` | Compact conversation → handoff doc for another agent |
-| `refactor-clean` (model-invoked) | Complements the `/refactor-clean` command in this repo |
-
-### Installation
-
-Just clone this repo as:
-
-```
-# in a fresh install, before the claude installation:
-$ git clone https://github.com/GiovaneRibeiro-neuro/claude-setup.git ~/.claude
-
-# or, in an existent claude install:
-
-$ cp -r ~/.claude ~/.claude.bkp
-$ git clone https://github.com/GiovaneRibeiro-neuro/claude-setup.git ~/.claude
-$ cp -r ~/.claude.bkp/**/*.* ~/.claude/
-```
 
 ## Tracker integration (optional)
 
-`/track-work` (backed by the `tracker-adapter` skill) creates tracker (Jira) epics/tasks
-from an approved plan. Connection details, custom-field mappings, and the card/epic
-description template are **per-client**, not host-global — each client gets its own
-`TRACKER.md` under `~/workspace/<client_name>/`, resolved at runtime by the
-`client-context` skill (walks up from the current working directory looking for a client
-folder; asks which client if that fails — see `skills/client-context/SKILL.md`).
+`/track-work` (backed by the `tracker-adapter` skill) creates Jira epics/tasks from an
+approved plan. Config is **per-client** — each client gets its own folder under
+`~/workspace/<client_name>/` with `TRACKER.md`, `VOCABULARY.md`, `CONTEXT-MAP.md`, and
+`EPIC-STANDARDS.md`.
 
 Before using `/track-work` for a new client:
 
-1. Copy the blank templates from `~/workspace/_templates/client/` into a new
-   `~/workspace/<client_name>/` folder: `VOCABULARY.md`, `CONTEXT-MAP.md`,
-   `EPIC-STANDARDS.md`, `TRACKER.md` (and `CONTEXT.md` too, if you'll also use
-   `pm-assistant` for Jira health reports/Epic authoring against this client).
-2. Fill in `TRACKER.md` with your org's cloud id, project keys, required custom-field
-   IDs, and description template — see `skills/tracker-adapter/adapters/jira.md` for the
-   concrete Jira call sequence that reads it.
-3. Optionally fill in `VOCABULARY.md` if you want stakeholder names auto-suggested for
-   an Epic's "Stakeholders" section.
+1. Copy templates from `~/workspace/_templates/client/` into `~/workspace/<client_name>/`.
+2. Fill in `TRACKER.md` with cloud id, project keys, custom-field IDs, and description
+   template — see `skills/tracker-adapter/adapters/jira.md` for the concrete call sequence.
+3. Optionally fill in `VOCABULARY.md` for stakeholder name auto-suggestions.
 
-These files hold org-specific values on purpose and live outside this repo entirely —
-`~/workspace/<client_name>/` isn't part of `~/.claude`, so there's nothing to gitignore
-here. Design history for this and related decisions, if a client has one recorded, lives
-at `<client_name>/_docs/adr/` — not in this repo, for the same reason the connection
-details above aren't: real org-specific facts shouldn't be committed here even as
-historical record.
+These files live outside this repo intentionally — `~/workspace/<client_name>/` is not
+part of `~/.claude`, so there is nothing to gitignore.
 
-## Example: a complete development flow
+## Development flow
 
-This walks one request through the full agent orchestration this repo defines — see
-`rules/common/agents.md` for the roster and sequencing rules referenced below (rule
-numbers in parens are that file's).
+The diagram below shows a full request through the agent orchestration. Rule numbers
+refer to `rules/common/agents.md`.
 
 ```mermaid
 flowchart TD
@@ -112,19 +113,15 @@ flowchart TD
         SEC["security-reviewer\nfloor triggered: touches auth + an API endpoint\n(rule 4 — not optional here)"]
     end
 
-    REV --> DOC["doc-updater\nupdates codemaps/docs\n(mandatory, always last — rule 6)"]
+    REV --> DOC["doc-updater\nupdates codemaps/docs\n(mandatory, always last — rule 5)"]
     SEC --> DOC
     DOC --> DONE["Report back to user"]
 ```
 
 ### Step-by-step execution
 
-Scenario: *"Add a JWT-protected `POST /api/refresh-token` endpoint to the auth service,
-write tests first, and track it in Jira."*
-
-Each step below is a prompt you type (or paste) into the Claude Code session. Steps that
-can run in parallel are marked **(parallel)** — send them in a single message with
-multiple Agent tool invocations.
+Each step is a prompt to type into the Claude Code session. Parallel steps must be sent
+in a **single message** so they run concurrently.
 
 ---
 
@@ -151,18 +148,17 @@ endpoint:
 Original request: add the endpoint, write tests first (TDD), track it in Jira.
 ```
 
-Manager returns a numbered dispatch table. Review it before executing.
+Review the numbered dispatch table before executing.
 
 ---
 
-**Step 3 — Track work (opt-in, run first so cards exist before code)**
+**Step 3 — Track work (opt-in, before code)**
 
 ```
 /track-work TEAM
 ```
 
-Wait for the issue keys and links. Do **not** proceed until you reply with explicit
-confirmation — the skill stops here by design.
+Wait for issue keys and links, then confirm explicitly to unblock implementation:
 
 ```
 Confirmed. Proceed with implementation.
@@ -174,37 +170,35 @@ Confirmed. Proceed with implementation.
 
 ```
 /tdd Scaffold failing tests for the JWT POST /api/refresh-token endpoint per the
-architect's design. Interface first, then write tests that FAIL before any implementation.
+architect's design. Interface first, then tests that FAIL before any implementation.
 ```
 
 ---
 
 **Step 5 — Implementation**
 
-Write the code in the main session (or delegate to a subagent) until all tests from
-step 4 pass. Commit when green.
+Write code until all tests from step 4 pass. Commit when green.
 
 ---
 
 **Step 6 — Build resolver (before any reviewer)**
 
 ```
-@build-resolver Fix any build, vet, or lint errors introduced by the refresh-token
-endpoint implementation.
+@build-resolver Fix any build, vet, or lint errors from the refresh-token implementation.
 ```
 
 ---
 
 **Step 7 — Language review + security review (parallel)**
 
-Send both in a single message so they run concurrently:
+Send both in a single message:
 
 ```
-@lang-reviewer Review the refresh-token endpoint changes for idiomatic Go (or whichever
-language applies), error handling, and concurrency correctness.
+@lang-reviewer Review the refresh-token endpoint changes for idiomatic patterns,
+error handling, and concurrency correctness.
 
-@security-reviewer Review the refresh-token endpoint for security issues — this touches
-JWT handling and an authenticated API endpoint.
+@security-reviewer Review the refresh-token endpoint — this touches JWT handling
+and an authenticated API endpoint.
 ```
 
 Address any CRITICAL or HIGH findings before continuing.
@@ -216,53 +210,3 @@ Address any CRITICAL or HIGH findings before continuing.
 ```
 @doc-updater Update codemaps and docs to reflect the new refresh-token endpoint.
 ```
-
----
-
-### Walkthrough
-
-Scenario: *"Add a JWT-protected `POST /api/refresh-token` endpoint to the auth service,
-write tests first, and track it in Jira."*
-
-1. **You** (the main Claude Code session — subagents can't call the `Agent` tool
-   themselves, so this orchestration always happens at the top level or in an agent that
-   explicitly has `Agent` access) invoke **`architect`** first with the raw request. It
-   comes back with a design: token-refresh contract, where it slots into the existing
-   auth module, error-handling shape, and any storage/schema implications.
-
-2. You invoke **`manager`** second, including architect's design in the prompt. Manager
-   returns a dispatch table. Because the request touches an API endpoint and auth
-   (rule 4's floor), `security-reviewer` is in the table even though the user never said
-   "security" — manager scans for that regardless of what was asked. Because the user
-   *did* ask to track the work, `/track-work` is included too (rule 6) — it
-   wouldn't be by default.
-
-3. You execute the table's steps via the `Agent` tool, in the order/parallelism manager
-   specified:
-   - **`/track-work`** (backed by the `tracker-adapter` skill) creates the epic + linked
-     tasks, reports the issue keys/links, and stops. Its approval gate means
-     implementation does **not** start yet — that needs your explicit "go" in
-     conversation, separate from this table completing.
-   - Once you confirm: the **`tdd` skill** scaffolds the failing tests for the new endpoint
-     (interface first, per TDD).
-   - Implementation happens (in this session or a delegated agent) to make those tests
-     pass.
-   - **`build-resolver`** runs before any reviewer touches the same code (rule 2),
-     clearing build/vet/lint noise so reviewers aren't reading around compile errors.
-   - **`lang-reviewer`** and **`security-reviewer`** run **in parallel** (rule 3) — they
-     cover the same files but don't conflict, and the security pass is mandatory here
-     specifically because of the auth/endpoint floor (rule 4), not because anyone asked
-     for it.
-   - **`doc-updater`** runs last, unconditionally (rule 6) — updates codemaps/docs even
-     though nobody asked for documentation either.
-
-4. Final report to the user bundles: the created Jira issue keys/links, what changed,
-   review findings (if any survived), and what docs got touched.
-
-Two things this scenario is chosen to demonstrate:
-- **Floors aren't suggestions.** `security-reviewer` and `doc-updater` show up whether or
-  not the user's wording mentioned them, because the request's *shape* (an auth-touching
-  endpoint; a code change at all) triggers them.
-- **Opt-in stays opt-in.** `/track-work` only appears because tracking was
-  explicitly requested, and its own completion doesn't unblock implementation — your
-  separate confirmation does (see `skills/tracker-adapter/SKILL.md`'s "Approval gate").
