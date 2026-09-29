@@ -117,6 +117,108 @@ flowchart TD
     DOC --> DONE["Report back to user"]
 ```
 
+### Step-by-step execution
+
+Scenario: *"Add a JWT-protected `POST /api/refresh-token` endpoint to the auth service,
+write tests first, and track it in Jira."*
+
+Each step below is a prompt you type (or paste) into the Claude Code session. Steps that
+can run in parallel are marked **(parallel)** — send them in a single message with
+multiple Agent tool invocations.
+
+---
+
+**Step 1 — Architect (mandatory first)**
+
+```
+@architect Add a JWT-protected POST /api/refresh-token endpoint to the auth service.
+Design the token-refresh contract, where it slots into the existing auth module,
+error-handling shape, and any storage/schema implications.
+```
+
+Wait for the design. Copy the full output — you will pass it to manager.
+
+---
+
+**Step 2 — Manager (decompose into a dispatch table)**
+
+```
+@manager Here is the architect's design for a JWT-protected POST /api/refresh-token
+endpoint:
+
+<paste architect output here>
+
+Original request: add the endpoint, write tests first (TDD), track it in Jira.
+```
+
+Manager returns a numbered dispatch table. Review it before executing.
+
+---
+
+**Step 3 — Track work (opt-in, run first so cards exist before code)**
+
+```
+/track-work TEAM
+```
+
+Wait for the issue keys and links. Do **not** proceed until you reply with explicit
+confirmation — the skill stops here by design.
+
+```
+Confirmed. Proceed with implementation.
+```
+
+---
+
+**Step 4 — TDD: scaffold failing tests**
+
+```
+/tdd Scaffold failing tests for the JWT POST /api/refresh-token endpoint per the
+architect's design. Interface first, then write tests that FAIL before any implementation.
+```
+
+---
+
+**Step 5 — Implementation**
+
+Write the code in the main session (or delegate to a subagent) until all tests from
+step 4 pass. Commit when green.
+
+---
+
+**Step 6 — Build resolver (before any reviewer)**
+
+```
+@build-resolver Fix any build, vet, or lint errors introduced by the refresh-token
+endpoint implementation.
+```
+
+---
+
+**Step 7 — Language review + security review (parallel)**
+
+Send both in a single message so they run concurrently:
+
+```
+@lang-reviewer Review the refresh-token endpoint changes for idiomatic Go (or whichever
+language applies), error handling, and concurrency correctness.
+
+@security-reviewer Review the refresh-token endpoint for security issues — this touches
+JWT handling and an authenticated API endpoint.
+```
+
+Address any CRITICAL or HIGH findings before continuing.
+
+---
+
+**Step 8 — Documentation (mandatory last step)**
+
+```
+@doc-updater Update codemaps and docs to reflect the new refresh-token endpoint.
+```
+
+---
+
 ### Walkthrough
 
 Scenario: *"Add a JWT-protected `POST /api/refresh-token` endpoint to the auth service,
