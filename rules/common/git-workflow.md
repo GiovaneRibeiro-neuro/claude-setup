@@ -13,7 +13,7 @@ feat|fix|docs|style|refactor|test|chore|perf. Subject: 70 chars max, imperative 
 
 ## Tracker issue key in commit subject (opt-in)
 
-When a commit implements work created via `tracker-integrator` / `/track-work`, put the
+When a commit implements work created via `/track-work`, put the
 tracker issue key in the scope:
 
 ```
@@ -30,7 +30,7 @@ feat(TEAM-123): add retry to card sync
   once, not duplicated.
 - This is not status automation — moving the card in the tracker is a manual step (or one
   you ask an agent to do explicitly), not a background watcher. See
-  `rules/common/agents.md`'s `tracker-integrator` entry for why: the approval gate design
+  `rules/common/agents.md`'s `/track-work` (skill) entry for why: the approval gate design
   deliberately avoids polling the tracker for status changes.
 
 ### Worked examples
