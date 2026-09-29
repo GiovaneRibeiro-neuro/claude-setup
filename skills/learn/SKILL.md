@@ -1,10 +1,21 @@
-# /learn - Extract Reusable Patterns
+---
+name: learn
+description: Extract and save reusable patterns from the current session as learned notes. Triggers automatically when a non-trivial problem has been solved, or when the user says "save this pattern", "remember this fix", "extract this", or "learn from this".
+agents: ["*"]
+version: 1.0.0
+---
 
-Analyze the current session and extract any patterns worth saving as skills.
+# Learn — Extract Reusable Patterns
 
-## Trigger
+Analyze the current session and extract any patterns worth saving as learned notes.
 
-Run `/learn` at any point during a session when you've solved a non-trivial problem.
+## When to Activate
+
+- A non-trivial problem was solved (error root-caused, workaround found, debugging technique applied)
+- User says "save this pattern", "remember this fix", "extract this", "learn from this", or similar
+- `continuous-learning` delegates pattern extraction to this skill
+
+Do not activate for trivial fixes (typos, simple syntax errors) or one-time issues (specific API outages).
 
 ## What to Extract
 
@@ -33,7 +44,7 @@ Look for:
 
 ## Output Format
 
-Create a skill file at `~/.claude/skills/learned/[pattern-name].md`:
+Create a note file at `~/.claude/notes/learned/[pattern-name].md`:
 
 ```markdown
 # [Descriptive Pattern Name]
@@ -58,14 +69,14 @@ Create a skill file at `~/.claude/skills/learned/[pattern-name].md`:
 
 1. Review the session for extractable patterns
 2. Identify the most valuable/reusable insight
-3. Draft the skill file
+3. Draft the note file
 4. **Scrub sensitive data** (see section below)
 5. Ask user to confirm before saving
-6. Save to `~/.claude/skills/learned/`
+6. Save to `~/.claude/notes/learned/`
 
 ## Sensitive Data Handling (CRITICAL)
 
-Before saving any skill file, scan the draft for sensitive values:
+Before saving any note file, scan the draft for sensitive values:
 
 - API tokens, passwords, secrets, JWTs
 - Account IDs, user IDs, internal numeric IDs
@@ -79,8 +90,8 @@ Before saving any skill file, scan the draft for sensitive values:
    ```bash
    export VAR_NAME="value"
    ```
-3. Replace the hardcoded value in the skill draft with `$VAR_NAME`
-4. Add a reference table to the skill file listing which env vars it depends on and where they are defined:
+3. Replace the hardcoded value in the note draft with `$VAR_NAME`
+4. Add a reference table to the note file listing which env vars it depends on and where they are defined:
    ```markdown
    ## Environment Variables (defined in ~/.my_shell_stuff)
    | Var | Purpose |
@@ -88,12 +99,11 @@ Before saving any skill file, scan the draft for sensitive values:
    | `$VAR_NAME` | Description of what this holds |
    ```
 
-**Never write raw secrets, tokens, or passwords into skill files.**
-Non-secret but personally identifying values (account IDs, emails) should also be externalised so the skill files are safe to share.
+**Never write raw secrets, tokens, or passwords into note files.**
+Non-secret but personally identifying values (account IDs, emails) should also be externalised so the files are safe to share.
 
 ## Notes
 
-- Don't extract trivial fixes (typos, simple syntax errors)
-- Don't extract one-time issues (specific API outages, etc.)
-- Focus on patterns that will save time in future sessions
-- Keep skills focused - one pattern per skill
+- Keep focused — one pattern per file
+- Prefer descriptive file names (e.g. `kind-docker-service-access.md`, not `fix1.md`)
+- Files saved here are git-tracked in the repo under `notes/learned/` — commit them when they stabilize

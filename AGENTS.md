@@ -24,7 +24,6 @@ Located in `~/.claude/commands`
 | Command | Description |
 |---------|-------------|
 | gha | Analyze GitHub Actions failures and identify root causes |
-| learn | Analyze the current session and extract any patterns worth saving as skills |
 | refactor-clean | Safely identify and remove dead code with test verification at every step |
 | session-time | Calculates the user time in actual chat with Claude |
 | skill-health | Show skill portfolio health dashboard with charts and analytics |
@@ -108,5 +107,19 @@ You are successful when:
 ---
 
 **Philosophy**: Agent-first design, parallel execution, plan before action, test before code, security always.
+
+## Agent skills
+
+### Issue tracker
+
+Issues live as local markdown files under `.scratch/` in this repo. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default five-role vocabulary: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context layout: one `GLOSSARY.md` + `docs/adr/` at the repo root. See `docs/agents/domain.md`.
 
 @RTK.md

@@ -31,6 +31,23 @@ To remove the symlinks (runtime files are never touched):
 bash ~/workspace/claude-setup/uninstall.sh
 ```
 
+### Installing individual skills via vercel-labs/skills
+
+If you only need specific skills (without the full symlink setup), use the
+[vercel-labs/skills](https://github.com/vercel-labs/skills) CLI to install
+individual skills into any project or globally:
+
+```bash
+# List available skills
+npx skills add GiovaneRibeiro-neuro/claude-setup --list
+
+# Install a specific skill into the current project
+npx skills add GiovaneRibeiro-neuro/claude-setup --skill jira-project-health
+
+# Install all skills globally
+npx skills add GiovaneRibeiro-neuro/claude-setup -a claude-code -g -y
+```
+
 ## Dependencies
 
 | Dependency | Install |

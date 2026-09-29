@@ -25,8 +25,8 @@ shell-snapshots/
 stats-cache.json
 tasks/
 
-# company-specific skill content (learned from a specific employer's Jira instance)
-skills/learned/jira-epic-arc-pattern.md
+# company-specific learned patterns (moved from skills/ to notes/ — not a skill)
+notes/learned/jira-epic-arc-pattern.md
 skills/github-actions-to-gitlab-ci/
 
 # contains a real name + real corporate email (authorship credit), not client

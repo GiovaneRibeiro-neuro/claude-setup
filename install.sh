@@ -33,6 +33,7 @@ LINKS=(
     scripts
     settings.json
     skills
+    notes
 )
 
 echo "Repo:   $REPO_DIR"
