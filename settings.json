@@ -78,9 +78,10 @@
       }
     ]
   },
-  "tui": "fullscreen",
-  "theme": "dark",
   "enabledPlugins": {
     "rust-analyzer-lsp@claude-plugins-official": true
-  }
+  },
+  "tui": "fullscreen",
+  "theme": "dark",
+  "model": "sonnet"
 }
